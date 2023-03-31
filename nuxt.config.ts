@@ -2,7 +2,7 @@
 import { resolve } from 'path'
 
 export default defineNuxtConfig({
-    modules: ['nuxt-icon', '@pinia/nuxt', '@nuxtjs/supabase'],
+    modules: ['nuxt-icon', '@pinia/nuxt'],
     alias: {
         '@': resolve(__dirname, "/")
     },
