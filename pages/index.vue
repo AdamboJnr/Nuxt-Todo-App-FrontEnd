@@ -11,7 +11,7 @@
             <li class="flex" v-for="todo in data">
                 <p>{{ todo.name }}</p>
                 <div class="">
-                    <button @click="removeItem(todo.name)" ><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 48 48"><g fill="none" stroke="#888888" stroke-linejoin="round" stroke-width="4"><path d="M9 10v34h30V10H9Z"/><path stroke-linecap="round" d="M20 20v13m8-13v13M4 10h40"/><path d="m16 10l3.289-6h9.488L32 10H16Z"/></g></svg></button>
+                    <button @click="removeItem(todo)" ><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 48 48"><g fill="none" stroke="#888888" stroke-linejoin="round" stroke-width="4"><path d="M9 10v34h30V10H9Z"/><path stroke-linecap="round" d="M20 20v13m8-13v13M4 10h40"/><path d="m16 10l3.289-6h9.488L32 10H16Z"/></g></svg></button>
                     <button ><svg @click="favoriteTodo(todo)" xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 48 48"><path :fill="todo.isFav === true ? 'red': 'none'" stroke="#888888" stroke-linecap="round" stroke-linejoin="round" stroke-width="4" d="M15 8C8.925 8 4 12.925 4 19c0 11 13 21 20 23.326C31 40 44 30 44 19c0-6.075-4.925-11-11-11c-3.72 0-7.01 1.847-9 4.674A10.987 10.987 0 0 0 15 8Z"/></svg></button>
                 </div>
 
@@ -34,16 +34,30 @@
             {  method: "post",headers: ({"Content-type": "application/json"}), body: JSON.stringify(todoItem)}
         )
         alert('Todo Item added to database')
-        input = ''
+        input = ""
     }  
 
     const removeItem = async (item) => {
-    //    todos.value = todos.value.filter(todo => item !== todo.name)
-        const { data } = await useFetch('https://nest-todo-app.vercel.app/todo/add')
+        // Get the todo id
+        const todoId = item.id
+
+        // Api Endpoint to delete Todo Item
+        const { data } = await useFetch(`https://nest-todo-app.vercel.app/todo/delete/${todoId}`, 
+            { method: "DELETE", headers: ({"Content-type": "application/json"}), params: todoId}
+        )
+        alert('Item removed from Database')
     }
 
-    const favoriteTodo = (item) => {
+    const favoriteTodo = async (item) => {
+        const todoId = item.id
+        
+        // Negate the value - True to False and vice versa
         item.isFav = !item.isFav
+        // Api endpoint to Negate the value
+        const { data } = await useFetch(`https://nest-todo-app.vercel.app/todo/edit/${todoId}`,
+            { method: "PATCH", headers: ({ "Content-type": "application/json"}), params: todoId, body: item}
+        )
+        alert('Item has been favorited')
     }
 
     useIntervalFn(() => {
