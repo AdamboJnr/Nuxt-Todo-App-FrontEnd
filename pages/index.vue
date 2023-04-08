@@ -34,7 +34,7 @@
             {  method: "post",headers: ({"Content-type": "application/json"}), body: JSON.stringify(todoItem)}
         )
         alert('Todo Item added to database')
-        input = ""
+        input.value = ""
     }  
 
     const removeItem = async (item) => {
